@@ -23,19 +23,16 @@ export default function SignUp() {
         event.preventDefault();
         if (password === verifyPassword && email && password) {
             createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up 
-            const user = userCredential.user;
-            console.log("🚀 ~ .then ~ user:", user)
-            
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            console.log("🚀 ~ handleSubmit ~ errorCode:", errorCode)
-            const errorMessage = error.message;
-            console.log("🚀 ~ handleSubmit ~ errorMessage:", errorMessage)
-            // ..
-          });
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log('🚀 ~ .then ~ user:', user);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    console.log('🚀 ~ handleSubmit ~ errorCode:', errorCode);
+                    const errorMessage = error.message;
+                    console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
+                });
         }
     };
 
@@ -112,11 +109,7 @@ export default function SignUp() {
 
                     <Grid container>
                         <Grid item>
-                            <Link
-                                component={RouterLink}
-                                to={`/sign-in`}
-                                variant="body2"
-                            >
+                            <Link component={RouterLink} to={`/sign-in`} variant="body2">
                                 {'Already have an account? Sign in'}
                             </Link>
                         </Grid>

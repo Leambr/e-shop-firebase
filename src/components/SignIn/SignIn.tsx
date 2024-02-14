@@ -13,22 +13,39 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase';
+import { auth, db } from '../../config/firebase';
+import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function SignIn() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
+
+    const getRoles = async (): Promise<string> => {
+        const querySnapshot = await getDocs(collection(db, 'roles'));
+        let role = '';
+        querySnapshot.forEach((doc) => {
+            role = doc.data().role;
+        });
+        return role;
+    };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (email && password) {
             signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed in
+                .then(async (userCredential) => {
                     const user = userCredential.user;
-                    console.log('🚀 ~ .then ~ user:', user);
-                    // ...
+
+                    const role = await getRoles();
+
+                    user.getIdToken().then((accessToken) => {
+                        localStorage.setItem('role', role);
+                        localStorage.setItem('token', accessToken);
+                        navigate('/homepage');
+                    });
                 })
                 .catch((error) => {
                     const errorCode = error.code;
