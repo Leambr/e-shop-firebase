@@ -14,8 +14,10 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { auth, db } from '../../config/firebase';
 import { addDoc, collection } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
-export default function SignUp() {
+export default function SignUp(props: any) {
+    const navigate = useNavigate();
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [verifyPassword, setVerifyPassword] = useState<string>();
@@ -24,28 +26,32 @@ export default function SignUp() {
         event.preventDefault();
         if (password === verifyPassword && email && password) {
             createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up 
-            const user = userCredential.user;
-            console.log("🚀 ~ .then ~ user:", user)
-            addRole(user.uid)
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            console.log("🚀 ~ handleSubmit ~ errorCode:", errorCode)
-            const errorMessage = error.message;
-            console.log("🚀 ~ handleSubmit ~ errorMessage:", errorMessage)
-          });
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log('🚀 ~ .then ~ user:', user);
+                    addRole(user.uid);
+
+                    user.getIdToken().then((accessToken) => {
+                        localStorage.setItem('role', props.role.toLowerCase());
+                        localStorage.setItem('token', accessToken);
+                        navigate('/homepage');
+                    });
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    console.log('🚀 ~ handleSubmit ~ errorCode:', errorCode);
+                    const errorMessage = error.message;
+                    console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
+                });
         }
     };
 
-    const addRole = async (uid :string) => {
-
-        await addDoc(collection(db,'roles'), {
-            role: "customer",
-            user_id: uid
+    const addRole = async (uid: string) => {
+        await addDoc(collection(db, 'roles'), {
+            role: props.role.toLowerCase(),
+            user_id: uid,
         });
-    }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -62,7 +68,7 @@ export default function SignUp() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    {props.role} Sign up
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
