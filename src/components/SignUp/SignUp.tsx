@@ -12,7 +12,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import * as React from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { auth } from '../../config/firebase';
+import { auth, db } from '../../config/firebase';
+import { addDoc, collection } from 'firebase/firestore';
 
 export default function SignUp() {
     const [email, setEmail] = useState<string>();
@@ -23,18 +24,28 @@ export default function SignUp() {
         event.preventDefault();
         if (password === verifyPassword && email && password) {
             createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    console.log('🚀 ~ .then ~ user:', user);
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    console.log('🚀 ~ handleSubmit ~ errorCode:', errorCode);
-                    const errorMessage = error.message;
-                    console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
-                });
+        .then((userCredential) => {
+            // Signed up 
+            const user = userCredential.user;
+            console.log("🚀 ~ .then ~ user:", user)
+            addRole(user.uid)
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            console.log("🚀 ~ handleSubmit ~ errorCode:", errorCode)
+            const errorMessage = error.message;
+            console.log("🚀 ~ handleSubmit ~ errorMessage:", errorMessage)
+          });
         }
     };
+
+    const addRole = async (uid :string) => {
+
+        await addDoc(collection(db,'roles'), {
+            role: "customer",
+            user_id: uid
+        });
+    }
 
     return (
         <Container component="main" maxWidth="xs">
