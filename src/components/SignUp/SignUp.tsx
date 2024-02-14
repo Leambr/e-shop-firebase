@@ -13,14 +13,13 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 export default function SignUp() {
-    const [firstName, setFirstName] = useState<string>();
-    const [lastName, setLastName] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
+    const [verifyPassword, setVerifyPassword] = useState<string>();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (firstName && lastName && email && password) {
+        if (password === verifyPassword) {
             // register(firstName, lastName, email, password, userType);
         }
     };
@@ -44,33 +43,6 @@ export default function SignUp() {
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                autoComplete="given-name"
-                                name="firstName"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                                onChange={(e) => {
-                                    setFirstName(e.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="family-name"
-                                onChange={(e) => {
-                                    setLastName(e.target.value);
-                                }}
-                            />
-                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 required
@@ -95,6 +67,20 @@ export default function SignUp() {
                                 autoComplete="new-password"
                                 onChange={(e) => {
                                     setPassword(e.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="password"
+                                label="Verify Password"
+                                type="password"
+                                id="password"
+                                autoComplete="new-password"
+                                onChange={(e) => {
+                                    setVerifyPassword(e.target.value);
                                 }}
                             />
                         </Grid>
