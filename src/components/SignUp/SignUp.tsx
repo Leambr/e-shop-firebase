@@ -12,9 +12,9 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import * as React from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { auth, db } from '../../config/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { auth } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
+import { addRole } from '../../services/rolesService';
 
 export default function SignUp(props: any) {
     const navigate = useNavigate();
@@ -28,14 +28,8 @@ export default function SignUp(props: any) {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    console.log('🚀 ~ .then ~ user:', user);
-                    addRole(user.uid);
-
-                    user.getIdToken().then((accessToken) => {
-                        localStorage.setItem('role', props.role.toLowerCase());
-                        localStorage.setItem('token', accessToken);
-                        navigate('/homepage');
-                    });
+                    addRole(props.role, user.uid);
+                    navigate('/homepage');
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -44,13 +38,6 @@ export default function SignUp(props: any) {
                     console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
                 });
         }
-    };
-
-    const addRole = async (uid: string) => {
-        await addDoc(collection(db, 'roles'), {
-            role: props.role.toLowerCase(),
-            user_id: uid,
-        });
     };
 
     return (

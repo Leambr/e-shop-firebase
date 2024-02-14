@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomerPage from '../Customer/CustomerPage'
 
@@ -11,7 +11,7 @@ export default function Homepage() {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
         if (!token && !role) {
-            navigate('/customer/sign-in');
+            navigate('/sign-in');
             return 
         }
         setToken(token)
