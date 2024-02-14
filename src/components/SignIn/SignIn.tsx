@@ -12,18 +12,30 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
-// import { login } from '../../core/api/login/login';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase';
 
 export default function SignIn() {
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
 
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (email && password) {
-            // login(email, password, userType);
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    const user = userCredential.user;
+                    console.log('🚀 ~ .then ~ user:', user);
+                    // ...
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    console.log('🚀 ~ handleSubmit ~ errorCode:', errorCode);
+                    const errorMessage = error.message;
+                    console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
+                });
         }
     };
 
@@ -82,11 +94,7 @@ export default function SignIn() {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link
-                                component={RouterLink}
-                                to={`/sign-up`}
-                                variant="body2"
-                            >
+                            <Link component={RouterLink} to={`/sign-up`} variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>

@@ -8,9 +8,11 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import * as React from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { auth } from '../../config/firebase';
 
 export default function SignUp() {
     const [email, setEmail] = useState<string>();
@@ -19,8 +21,21 @@ export default function SignUp() {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (password === verifyPassword) {
-            // register(firstName, lastName, email, password, userType);
+        if (password === verifyPassword && email && password) {
+            createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed up 
+            const user = userCredential.user;
+            console.log("🚀 ~ .then ~ user:", user)
+            
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            console.log("🚀 ~ handleSubmit ~ errorCode:", errorCode)
+            const errorMessage = error.message;
+            console.log("🚀 ~ handleSubmit ~ errorMessage:", errorMessage)
+            // ..
+          });
         }
     };
 
