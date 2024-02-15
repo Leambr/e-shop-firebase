@@ -1,4 +1,3 @@
-import { Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 
@@ -16,9 +15,9 @@ export default function SellerPage() {
     };
 
     return (
-        <Container>
+        <div>
             <h1>Seller</h1>
             <button onClick={handleLogout}>logout</button>
-        </Container>
+        </div>
     );
 }

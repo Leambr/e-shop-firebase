@@ -3,17 +3,15 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { addRole } from '../../services/rolesService';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
+import { addRole } from '../../services/rolesService';
 
 export default function SignUp(props: any) {
     const navigate = useNavigate();
@@ -34,7 +32,16 @@ export default function SignUp(props: any) {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container
+            component="main"
+            maxWidth="xs"
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
+            }}
+        >
             <Box
                 sx={{
                     marginTop: 8,
