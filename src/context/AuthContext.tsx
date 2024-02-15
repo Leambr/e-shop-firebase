@@ -5,10 +5,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
 } from 'firebase/auth';
-import React, { createContext, useState, useContext, FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../config/firebase';
 import { getRoleByUserId } from '../services/rolesService';
-import { set } from 'firebase/database';
 
 interface User {
     uuid: string;

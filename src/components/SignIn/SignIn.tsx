@@ -14,8 +14,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 
-import s from './SignIn.module.css';
-
 export default function SignIn() {
     const navigate = useNavigate();
     const { SignIn } = useAuthContext();
