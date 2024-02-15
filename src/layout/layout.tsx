@@ -1,18 +1,24 @@
-import { ThemeProvider } from '@emotion/react';
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { ThemeProvider } from '@emotion/react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { theme } from '../mui-design-system/ThemeProvider';
 import { Container, CssBaseline } from '@mui/material';
 import Navbar from '../components/Navbar/Navbar';
-import { useAuthContext } from '../context/AuthContext';
 
 export const Layout = () => {
-    const { isLogged } = useAuthContext();
+    const token = localStorage.getItem('token');
+    const location = useLocation();
+
+    const shouldDisplayNavbar =
+        token &&
+        location.pathname !== '/seller/sign-up' &&
+        location.pathname !== '/customer/sign-up';
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <>
-                {isLogged && <Navbar />}
+                {shouldDisplayNavbar && <Navbar />}
                 <Container maxWidth="md">
                     <Outlet />
                 </Container>
