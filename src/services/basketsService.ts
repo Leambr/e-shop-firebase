@@ -1,42 +1,61 @@
 import { db } from '../config/firebase';
-import { collection, addDoc, doc, updateDoc, arrayUnion, query, where, getDocs, getDoc, DocumentSnapshot, DocumentData } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, arrayUnion, query, where, getDocs, getDoc, DocumentSnapshot, DocumentData, setDoc } from "firebase/firestore";
 
 interface Basket {
+    id:string
     productId: string[];
     status: string;
     userCustomerId: string;
   }
   
 
-export const addProductToBasket = async (basketId: string, productId: string) => {
+  export const addProductToBasket = async (basketId: string, productId: string) => {
     try {
         const basketRef = doc(db, "baskets", basketId);
+        const basketSnapshot = await getDoc(basketRef);
+        if (basketSnapshot.exists()) {
+            const basketData = basketSnapshot.data();
+            if (Object.prototype.hasOwnProperty.call(basketData, "product_id")) {
+                await updateDoc(basketRef, {
+                    product_id: arrayUnion(productId)
+                });
+            } else {
 
-        await updateDoc(basketRef, {
-            product_id: arrayUnion(productId)
-        });
+                await setDoc(basketRef, {
+                    product_id: [productId]
+                }, { merge: true });
+            }
+        } else {
+            console.log("Le panier n'existe pas");
+        }
     } catch (error) {
         console.error("Erreur lors de l'ajout du produit au panier :", error);
     }
 };
 
-export const createBasket = async (uid:string) => {
+export const createBasket = async (uid:string) : Promise<DocumentData | undefined | null> => {
     
     try {
-        await addDoc(collection(db, 'baskets'), {
-            user_customer_id: uid.toLowerCase(),
+        const basket = await addDoc(collection(db, 'baskets'), {
+            customer_id: uid.toLowerCase(),
             status:"created",
             product_id:[]
         });
+
+        return basket
         
     } catch (error) {
         console.error("Erreur lors de l'ajout du produit au panier :", error);
     }
 };
 
-export const getBasketById = async (bid: string): Promise<DocumentData | undefined | null> => {
+export const getBasketByUserId = async (uid: string): Promise<DocumentData | undefined | null> => {
     try {
-        const basketRef = doc(db, "baskets", bid);
+        const basketRef = query(
+            collection(db, "baskets"),
+            where("customer_id", "==", uid.toLowerCase()),
+            where("status", "==", "created")
+        );
 
         const basketSnapshot = await getDoc(basketRef);
 
@@ -45,7 +64,7 @@ export const getBasketById = async (bid: string): Promise<DocumentData | undefin
             const basketData = basketSnapshot.data()
             return basketData;
         } else {
-            console.log(`Aucun document trouvé avec l'ID ${bid} dans la collection 'baskets'`);
+            console.log(`Aucun document trouvé avec l'ID ${uid} dans la collection 'baskets'`);
             return null;
         }
     } catch (error) {

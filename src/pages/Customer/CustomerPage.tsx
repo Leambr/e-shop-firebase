@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { getAllProducts } from '../../services/productsService';
-import { createBasket, getBasketById, addProductToBasket } from '../../services/basketsService';
+import { createBasket, getBasketByUserId, addProductToBasket } from '../../services/basketsService';
 import { useEffect, useState } from 'react';
 
 interface Product {
@@ -11,6 +11,7 @@ interface Product {
   img: string;
 }
 interface Basket {
+  id:string;
   productId: string[];
   status: string;
   userCustomerId: string;
@@ -35,13 +36,18 @@ export default function CustomerPage() {
           console.error("Erreur lors de la récupération des produits :", error);
         }
       };
-      getBasket()
+
       fetchProducts();
-      console.log("new --->", basket);
+      if (user && user.uuid) {
+        getBasket();
+    }
+      console.log("new-->",basket);
       
-    }, []);
+    }, [user]);
 
     const handleAddToBasket = async (bid: string, pid:string) => {
+
+      console.log(bid, pid);
         try {
           await addProductToBasket(bid, pid) 
           getBasket()
@@ -51,22 +57,25 @@ export default function CustomerPage() {
     }
 
     const getBasket = async () => {
-
-      
-      // a decommenter quand basketContext est set
-
-      // if (basketId == null) {
-      //   console.log("basketnull");
-        
-      //   const newBasket = await createBasket(user.uuid)
-
-      //   setBasket(newBasket)
-      // }
-      const currentBasket = await getBasketById(basketId)
-      console.log("current --->",currentBasket);
-      
-      setBasket(currentBasket as Basket)
-    }
+      if(user && user.uuid) {
+          const currentBasket = await getBasketByUserId(user.uuid)
+          console.log("currentBasket->", currentBasket, "user_id ->",user.uuid);
+          
+          if (currentBasket === null || currentBasket === undefined) {
+              console.log('Aucun panier trouvé, création d\'un nouveau panier');
+              
+              const newBasket = await createBasket(user.uuid)
+              console.log("createBasket -->", newBasket);
+              
+              setBasket(newBasket as Basket)
+          }
+          else {
+              console.log('Panier existant trouvé');
+              setBasket(currentBasket as Basket)
+          }
+      }
+  }
+  
 
     const handleLogout = async () => {
         try {
@@ -86,8 +95,10 @@ export default function CustomerPage() {
                                     <td>{prod.price}</td>
                                     <td>{prod.img}</td>
                                     <td>
-                                        <button onClick={() => handleAddToBasket(basketId, prod.id)}>{basket.product_id != undefined && basket.product_id.indexOf(prod.id) != -1 ? "Done" : "Add"}</button>
-                                    </td>
+                        <button onClick={() => handleAddToBasket(basket?.id ?? "", prod.id)}>
+                            {basket && basket.productId && basket.productId.indexOf(prod.id) !== -1 ? "Done" : "Add"}
+                        </button>
+                    </td>
                                 </tr>
                             ))}
           </div>
