@@ -1,10 +1,9 @@
 import React from 'react';
-import { useAuthContext } from '../context/AuthContext';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-    const { user } = useAuthContext();
+    const storedToken = localStorage.getItem('token');
 
-    if (!user.hasOwnProperty('role')) {
+    if (!storedToken) {
         location.href = '/sign-in';
         return;
     }

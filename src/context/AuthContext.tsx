@@ -47,6 +47,7 @@ export const AuthContextProvider: FunctionComponent<{ children: React.ReactNode 
     const Logout = () => {
         localStorage.removeItem('role');
         localStorage.removeItem('token');
+        location.href = '/sign-in';
         return signOut(auth);
     };
 
