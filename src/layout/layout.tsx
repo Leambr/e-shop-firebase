@@ -12,8 +12,9 @@ export const Layout = () => {
     const shouldDisplayNavbar =
         token &&
         location.pathname !== '/seller/sign-up' &&
-        location.pathname !== '/customer/sign-up';
-
+        location.pathname !== '/customer/sign-up' &&
+        location.pathname !== '/' &&
+        location.pathname !== '/sign-in';
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
