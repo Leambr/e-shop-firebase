@@ -12,36 +12,28 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
-import { getRoleByUserId } from '../../services/rolesService';
+import { useAuthContext } from '../../context/AuthContext';
 
 export default function SignIn() {
     const navigate = useNavigate();
+    const { SignIn } = useAuthContext();
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (email && password) {
-            signInWithEmailAndPassword(auth, email, password)
-                .then(async (userCredential) => {
-                    const user = userCredential.user;
-                    const role = await getRoleByUserId(user?.uid);
-                    user.getIdToken().then((accessToken) => {
-                        localStorage.setItem('role', role);
-                        localStorage.setItem('token', accessToken);
-                        navigate('/homepage');
-                    });
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    console.log('🚀 ~ handleSubmit ~ errorCode:', errorCode);
-                    const errorMessage = error.message;
-                    console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
-                });
+            try {
+                const signIn = await SignIn(email, password);
+                if (signIn.user) {
+                    navigate('/homepage');
+                }
+            } catch (error) {
+                
+                console.log('🚀 ~ handleSubmit ~ error:', error)
+            }
         }
     };
 

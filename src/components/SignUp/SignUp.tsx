@@ -8,35 +8,28 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import * as React from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { auth } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { addRole } from '../../services/rolesService';
+import { useAuthContext } from '../../context/AuthContext';
 
 export default function SignUp(props: any) {
     const navigate = useNavigate();
+    const { CreateUser } = useAuthContext();
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [verifyPassword, setVerifyPassword] = useState<string>();
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (password === verifyPassword && email && password) {
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    addRole(props.role, user.uid);
-                    navigate('/homepage');
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    console.log('🚀 ~ handleSubmit ~ errorCode:', errorCode);
-                    const errorMessage = error.message;
-                    console.log('🚀 ~ handleSubmit ~ errorMessage:', errorMessage);
-                });
+            const createUser = await CreateUser(email, password);
+            if (createUser.user) {
+                await addRole(props.role, createUser.user.uid);
+                navigate('/sign-in');
+            }
         }
     };
 

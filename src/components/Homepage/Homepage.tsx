@@ -1,32 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomerPage from '../Customer/CustomerPage'
+import SellerPage from '../Seller/SellerPage';
+import { useAuthContext } from '../../context/AuthContext';
 
 export default function Homepage() {
     const navigate = useNavigate();
-
-    const [role, setRole] = useState<string | null>();
-    const [token, setToken] = useState<string  | null>();
+    const { user } = useAuthContext();
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role');
-        if (!token && !role) {
+        const storedToken = localStorage.getItem('token');
+        if (!storedToken) {
             navigate('/sign-in');
             return 
         }
-        setToken(token)
-        setRole(role)
     }, []);
 
-    // Continue with the rest of the code for the Homepage component
-    return <div >
-        {role == "seller" ? (
-            <h1>Seller</h1>
-        ) : role == "customer" ? (
-          
-            <CustomerPage />
-        ) : (
-            <h1>Rien</h1>
-        )}
-    </div>;
+    return (
+        <div>
+            {user?.role === 'seller' ? (
+                <SellerPage />
+            ) : (
+                <CustomerPage />
+            )}
+        </div>
+    );
 }
