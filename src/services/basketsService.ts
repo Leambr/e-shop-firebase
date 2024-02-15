@@ -9,7 +9,6 @@ import {
     where,
     getDocs,
     getDoc,
-    DocumentSnapshot,
     DocumentData,
     setDoc,
 } from 'firebase/firestore';
@@ -64,28 +63,22 @@ export const createBasket = async (uid: string): Promise<DocumentData | undefine
 
 export const getBasketByUserId = async (uid: string): Promise<DocumentData | undefined | null> => {
     try {
-        const basketQuery = query(collection(db, 'baskets'), where('customer_id', '==', uid));
+        const lowerCaseUserId = uid.toLowerCase();
+        const basketQuery = query(
+            collection(db, 'baskets'),
+            where('customer_id', '==', lowerCaseUserId),
+            where('status', '==', 'created')
+        );
 
         const basketSnapshot = await getDocs(basketQuery);
 
         if (!basketSnapshot.empty) {
             const basketData = basketSnapshot.docs[0].data();
             return basketData;
-        } else {
-            console.log(`No document found with ID ${uid} in the 'baskets' collection`);
-            return null;
         }
-        // console.log('basketref', basketRef);
 
-        // const basketSnapshot = await getDoc(basketRef);
-
-        // if (basketSnapshot.docs.length > 0) {
-        //     const basketData = basketSnapshot.docs[0].data();
-        //     return basketData;
-        // } else {
-        //     console.log(`Aucun document trouvé avec l'ID ${uid} dans la collection 'baskets'`);
-        //     return null;
-        // }
+        console.log(`No document found with ID ${uid} in the 'baskets' collection`);
+        return null;
     } catch (error) {
         console.error("Erreur lors de la récupération de l'élément :", error);
         return null;

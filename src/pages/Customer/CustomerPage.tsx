@@ -38,7 +38,6 @@ export default function CustomerPage() {
         if (user && user.uuid) {
             getBasket();
         }
-        console.log('new-->', basket);
     }, [user]);
 
     const handleAddToBasket = async (bid: string, pid: string) => {
@@ -54,19 +53,16 @@ export default function CustomerPage() {
     const getBasket = async () => {
         if (user && user.uuid) {
             const currentBasket = await getBasketByUserId(user.uuid);
-            console.log('currentBasket->', currentBasket, 'user_id ->', user.uuid);
 
             if (currentBasket === null || currentBasket === undefined) {
                 console.log("Aucun panier trouvé, création d'un nouveau panier");
 
                 const newBasket = await createBasket(user.uuid);
-                console.log('createBasket -->', newBasket);
 
                 setBasket(newBasket as Basket);
-            } else {
-                console.log('Panier existant trouvé');
-                setBasket(currentBasket as Basket);
             }
+            console.log('Panier existant trouvé');
+            setBasket(currentBasket as Basket);
         }
     };
 
