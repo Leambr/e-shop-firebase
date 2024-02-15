@@ -31,15 +31,13 @@ export default function SignIn() {
                     navigate('/homepage');
                 }
             } catch (error) {
-                
-                console.log('🚀 ~ handleSubmit ~ error:', error)
+                console.log('🚀 ~ handleSubmit ~ error:', error);
             }
         }
     };
 
     return (
         <Container component="main" maxWidth="xs">
-            <CssBaseline />
             <Box
                 sx={{
                     marginTop: 8,
