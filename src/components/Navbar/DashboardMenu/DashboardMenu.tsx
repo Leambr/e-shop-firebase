@@ -60,7 +60,7 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                             }}
                         >
                             <Typography variant="badge" color={'grey'}>
-                                Product
+                                Products
                             </Typography>
                         </ListItem>
                         <ListItemButton
@@ -81,6 +81,33 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                             }}
                         >
                             Basket
+                        </ListItemButton>
+                    </List>
+                    <List
+                        sx={{
+                            marginBottom: '32px',
+                            padding: 0,
+                        }}
+                    >
+                        <ListItem
+                            sx={{
+                                padding: '0 0 0 24px',
+                                marginBottom: '4px',
+                            }}
+                        >
+                            <Typography variant="badge" color={'grey'}>
+                                Orders
+                            </Typography>
+                        </ListItem>
+                        <ListItemButton
+                            onClick={onClose}
+                            //mettre la bonne route pour rediriger sur la bonne page
+                            href=""
+                            sx={{
+                                padding: '12px 32px',
+                            }}
+                        >
+                            See orders
                         </ListItemButton>
                     </List>
                 </div>

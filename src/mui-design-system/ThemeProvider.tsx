@@ -1,6 +1,12 @@
 import { createTheme } from '@mui/material';
 
 export const theme = createTheme({
+    palette: {
+        primary: {
+            light: '#265669',
+            main: '#183642',
+        },
+    },
     typography: {
         fontFamily: 'var( --sans-serif)',
         button: {
