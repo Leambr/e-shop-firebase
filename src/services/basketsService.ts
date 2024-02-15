@@ -13,12 +13,17 @@ import {
     setDoc,
 } from 'firebase/firestore';
 
-interface Basket {
-    id: string;
-    productId: string[];
-    status: string;
-    userCustomerId: string;
-}
+export const getBasketId = async (): Promise<string> => {
+    const basketsCollection = collection(db, 'baskets');
+    const querySnapshot = await getDocs(basketsCollection);
+
+    let basketId: string | undefined;
+    querySnapshot.forEach((doc) => {
+        basketId = doc.id;
+    });
+
+    return basketId || '';
+};
 
 export const addProductToBasket = async (basketId: string, productId: string) => {
     try {

@@ -1,7 +1,11 @@
-import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { getAllProducts } from '../../services/productsService';
-import { createBasket, getBasketByUserId, addProductToBasket } from '../../services/basketsService';
+import {
+    createBasket,
+    getBasketByUserId,
+    addProductToBasket,
+    getBasketId,
+} from '../../services/basketsService';
 import { useEffect, useState } from 'react';
 
 interface Product {
@@ -12,16 +16,14 @@ interface Product {
 }
 interface Basket {
     id: string;
-    productId: string[];
+    product_id: string[];
     status: string;
     userCustomerId: string;
 }
 
 export default function CustomerPage() {
-    const navigate = useNavigate();
-    const { Logout } = useAuthContext();
     const [products, setProducts] = useState<Product[]>([]);
-    const [basket, setBasket] = useState<Basket | null>();
+    const [basket, setBasket] = useState<Basket>();
     const { user } = useAuthContext();
 
     useEffect(() => {
@@ -40,10 +42,11 @@ export default function CustomerPage() {
         }
     }, [user]);
 
-    const handleAddToBasket = async (bid: string, pid: string) => {
-        console.log(bid, pid);
+    const handleAddToBasket = async (productId: string) => {
+        const currentBasketId = await getBasketId();
+
         try {
-            await addProductToBasket(bid, pid);
+            await addProductToBasket(currentBasketId, productId);
             getBasket();
         } catch (error) {
             console.log(error);
@@ -62,16 +65,9 @@ export default function CustomerPage() {
                 setBasket(newBasket as Basket);
             }
             console.log('Panier existant trouvé');
-            setBasket(currentBasket as Basket);
-        }
-    };
+            console.log(currentBasket);
 
-    const handleLogout = async () => {
-        try {
-            await Logout();
-            navigate('/sign-in');
-        } catch (e) {
-            console.log(e);
+            setBasket(currentBasket as Basket);
         }
     };
 
@@ -86,20 +82,18 @@ export default function CustomerPage() {
                             <td>{prod.price}</td>
                             <td>{prod.img}</td>
                             <td>
-                                <button
-                                    onClick={() => handleAddToBasket(basket?.id ?? '', prod.id)}
-                                >
-                                    {basket &&
-                                    basket.productId &&
-                                    basket.productId.indexOf(prod.id) !== -1
-                                        ? 'Done'
-                                        : 'Add'}
-                                </button>
+                                {basket && (
+                                    <button onClick={() => handleAddToBasket(prod.id)}>
+                                        {basket.product_id &&
+                                        basket.product_id.indexOf(prod.id) !== -1
+                                            ? 'Done'
+                                            : 'Add'}
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}
             </div>
-            <button onClick={handleLogout}>logout</button>
         </div>
     );
 }
