@@ -7,6 +7,7 @@ import {
     getBasketId,
 } from '../../services/basketsService';
 import { useEffect, useState } from 'react';
+import ProductPage from '../Product/ProductPage';
 
 interface Product {
     id: string;
@@ -73,7 +74,7 @@ export default function CustomerPage() {
 
     return (
         <div>
-            <h1>Customer</h1>
+            {/* <h1>Customer</h1>
             <div>
                 {products &&
                     products.map((prod: Product) => (
@@ -93,7 +94,8 @@ export default function CustomerPage() {
                             </td>
                         </tr>
                     ))}
-            </div>
+            </div> */}
+            <ProductPage />
         </div>
     );
 }
