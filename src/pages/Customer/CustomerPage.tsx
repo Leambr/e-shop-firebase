@@ -8,31 +8,18 @@ import {
 } from '../../services/cartsService';
 import { useEffect, useState } from 'react';
 import ProductPage from '../Product/ProductPage';
-
-interface Product {
-    id: string;
-    label: string;
-    price: number;
-    img?: string;
-    seller_id?: string;
-}
-interface Cart {
-    id: string;
-    product_id: string[];
-    status: string;
-    userCustomerId: string;
-}
+import { Product, Cart } from '../../components/ShoppingCart/ShoppingCart';
 
 export default function CustomerPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [cart, setCart] = useState<Cart>();
+    console.log('🚀 ~ CustomerPage ~ cart:', cart);
     const { user } = useAuthContext();
 
     const fetchProducts = async () => {
         try {
             const allProducts = await getAllProducts();
             setProducts(allProducts);
-            console.log('products', products);
         } catch (error) {
             console.error('Erreur lors de la récupération des produits :', error);
         }
@@ -68,7 +55,6 @@ export default function CustomerPage() {
                 setCart(newCart as Cart);
             }
             console.log('Panier existant trouvé');
-            console.log('curr cart', currentCart);
 
             setCart(currentCart as Cart);
         }

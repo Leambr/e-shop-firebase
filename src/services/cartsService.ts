@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 
 export const getCartId = async (): Promise<string> => {
-    const cartsCollection = collection(db, 'baskets');
+    const cartsCollection = collection(db, 'carts');
     const querySnapshot = await getDocs(cartsCollection);
 
     let cartId: string | undefined;
@@ -32,7 +32,7 @@ export const addProductToCart = async (
     price: number
 ) => {
     try {
-        const cartRef = doc(db, 'baskets', cartId);
+        const cartRef = doc(db, 'carts', cartId);
         const cartSnapshot = await getDoc(cartRef);
         if (cartSnapshot.exists()) {
             const cartData = cartSnapshot.data();
@@ -61,7 +61,7 @@ export const addProductToCart = async (
 
 export const createCart = async (uid: string): Promise<DocumentData | undefined | null> => {
     try {
-        const cart = await addDoc(collection(db, 'baskets'), {
+        const cart = await addDoc(collection(db, 'carts'), {
             customer_id: uid.toLowerCase(),
             status: 'created',
             product_id: [],
@@ -77,7 +77,7 @@ export const getCartByUserId = async (uid: string): Promise<DocumentData | undef
     try {
         const lowerCaseUserId = uid.toLowerCase();
         const cartQuery = query(
-            collection(db, 'baskets'),
+            collection(db, 'carts'),
             where('customer_id', '==', lowerCaseUserId),
             where('status', '==', 'created')
         );
@@ -89,7 +89,7 @@ export const getCartByUserId = async (uid: string): Promise<DocumentData | undef
             return cartData;
         }
 
-        console.log(`No document found with ID ${uid} in the 'baskets' collection`);
+        console.log(`No document found with ID ${uid} in the 'carts' collection`);
         return null;
     } catch (error) {
         console.error("Erreur lors de la récupération de l'élément :", error);

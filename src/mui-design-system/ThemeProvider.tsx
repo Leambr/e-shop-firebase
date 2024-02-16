@@ -60,5 +60,17 @@ export const theme = createTheme({
                 },
             },
         },
+        MuiTableCell: {
+            variants: [
+                {
+                    props: { variant: 'titleS' },
+                    style: {
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        lineHeight: '1.5rem',
+                    },
+                },
+            ],
+        },
     },
 });
