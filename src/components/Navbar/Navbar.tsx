@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowDropDown, ArrowDropUp, ShoppingCart, ViewHeadline } from '@mui/icons-material';
-import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, IconButton, Link, Toolbar, Typography } from '@mui/material';
 import s from './Navbar.module.css';
 import { DashboardMenu } from './DashboardMenu/DashboardMenu';
 import { UserMenu } from './UserMenu/UserMenu';
@@ -26,9 +26,13 @@ export default function Navbar() {
                         isOpen={displayLeftMenu}
                         onClose={() => setDisplayLeftMenu(false)}
                     />
-                    <Typography variant="titleS">E-shop</Typography>
+                    <Typography variant="titleS">
+                        <Link href="/homepage" color="inherit" underline="none">
+                            E-shop
+                        </Link>
+                    </Typography>
                     <div className={s.rightContainer}>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" href="/cart">
                             <ShoppingCart />
                         </IconButton>
                         <div className={s.userMenu} onClick={handleUserMenuClick}>
