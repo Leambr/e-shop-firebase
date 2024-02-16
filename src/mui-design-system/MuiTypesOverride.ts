@@ -32,3 +32,9 @@ declare module '@mui/material/Typography' {
         annotation: true;
     }
 }
+
+declare module '@mui/material/TableCell' {
+    export interface TableCellPropsVariantOverrides {
+        titleS: true;
+    }
+}

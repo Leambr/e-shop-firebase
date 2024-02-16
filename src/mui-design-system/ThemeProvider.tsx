@@ -60,27 +60,5 @@ export const theme = createTheme({
                 },
             },
         },
-        // MuiDivider: {
-        //     styleOverrides: {
-        //         root: {
-        //             margin: 0,
-        //         },
-        //     },
-        // },
-        // MuiMenu: {
-        //     styleOverrides: {
-        //         list: {
-        //             padding: 0,
-        //         },
-        //     },
-        // },
-        // MuiMenuItem: {
-        //     styleOverrides: {
-        //         divider: {
-        //             paddingTop: 12,
-        //             paddingBottom: 12,
-        //         },
-        //     },
-        // },
     },
 });

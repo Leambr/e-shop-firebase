@@ -3,7 +3,6 @@ import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Add, ShoppingBagOutlined, ShoppingBasketSharp } from '@mui/icons-material';
 import { useState } from 'react';
 import { Button } from '@mui/material';
 

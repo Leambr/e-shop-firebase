@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowDropDown, ArrowDropUp, ViewHeadline } from '@mui/icons-material';
-import { AppBar, Avatar, Box, Toolbar, Typography } from '@mui/material';
+import { ArrowDropDown, ArrowDropUp, ShoppingCart, ViewHeadline } from '@mui/icons-material';
+import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import s from './Navbar.module.css';
 import { DashboardMenu } from './DashboardMenu/DashboardMenu';
 import { UserMenu } from './UserMenu/UserMenu';
@@ -28,6 +28,9 @@ export default function Navbar() {
                     />
                     <Typography variant="titleS">E-shop</Typography>
                     <div className={s.rightContainer}>
+                        <IconButton color="inherit">
+                            <ShoppingCart />
+                        </IconButton>
                         <div className={s.userMenu} onClick={handleUserMenuClick}>
                             <Avatar />
                             {displayUserMenu ? (
