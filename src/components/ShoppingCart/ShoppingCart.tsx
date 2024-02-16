@@ -99,7 +99,7 @@ export const ShoppingCart = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
-                        {products.length === 0 && (
+                        {products && products.length === 0 && (
                             <TableRow>
                                 <TableCell colSpan={3}>
                                     <Typography align="center">Your cart is empty</Typography>
@@ -109,6 +109,7 @@ export const ShoppingCart = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {products === undefined && <Typography align="center">Your cart is empty</Typography>}
         </>
     );
 };
