@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { ArrowDropDown, ArrowDropUp, ShoppingCart, ViewHeadline } from '@mui/icons-material';
-import { AppBar, Avatar, Box, IconButton, Link, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, IconButton, Link, Toolbar, Typography, styled } from '@mui/material';
 import s from './Navbar.module.css';
 import { DashboardMenu } from './DashboardMenu/DashboardMenu';
 import { UserMenu } from './UserMenu/UserMenu';
+
+const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 export default function Navbar() {
     const [displayLeftMenu, setDisplayLeftMenu] = useState(false);
@@ -16,8 +18,8 @@ export default function Navbar() {
     };
 
     return (
-        <Box>
-            <AppBar position="static">
+        <>
+            <AppBar position="fixed">
                 <Toolbar variant="dense">
                     <div className={s.burgerMenu} onClick={() => setDisplayLeftMenu(true)}>
                         <ViewHeadline />
@@ -51,6 +53,7 @@ export default function Navbar() {
                     </div>
                 </Toolbar>
             </AppBar>
-        </Box>
+            <Offset />
+        </>
     );
 }
