@@ -1,3 +1,4 @@
+import { Product } from '../components/ShoppingCart/ShoppingCart';
 import { db } from '../config/firebase';
 import {
     collection,
@@ -94,5 +95,31 @@ export const getCartByUserId = async (uid: string): Promise<DocumentData | undef
     } catch (error) {
         console.error("Erreur lors de la récupération de l'élément :", error);
         return null;
+    }
+};
+
+export const deleteProductFromCart = async (cartId: string, productId: string) => {
+    try {
+        const cartRef = doc(db, 'carts', cartId);
+        const cartSnapshot = await getDoc(cartRef);
+
+        if (cartSnapshot.exists()) {
+            const cartData = cartSnapshot.data();
+            if (Object.prototype.hasOwnProperty.call(cartData, 'product_id')) {
+                const updatedProductIds = cartData.product_id.filter(
+                    (id: string) => id !== productId
+                );
+                const updatedProducts = cartData.products.filter(
+                    (product: Product) => product.id !== productId
+                );
+
+                await updateDoc(cartRef, {
+                    product_id: updatedProductIds,
+                    products: updatedProducts,
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Erreur lors de la suppression du produit du panier :', error);
     }
 };

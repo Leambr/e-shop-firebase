@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { useAuthContext } from '../../context/AuthContext';
-import { getCartByUserId } from '../../services/cartsService';
+import { deleteProductFromCart, getCartByUserId, getCartId } from '../../services/cartsService';
 
 export interface Product {
     id: string;
@@ -43,6 +43,17 @@ export const ShoppingCart = () => {
             }
 
             setCart(currentCart as Cart);
+        }
+    };
+
+    const handleDeleteProduct = async (productId: string) => {
+        const currentCartId = await getCartId();
+
+        try {
+            await deleteProductFromCart(currentCartId, productId);
+            getCart();
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -82,12 +93,19 @@ export const ShoppingCart = () => {
                                     </TableCell>
                                     <TableCell align="right">{product.price}</TableCell>
                                     <TableCell align="right">
-                                        <IconButton>
+                                        <IconButton onClick={() => handleDeleteProduct(product.id)}>
                                             <Delete color="primary" />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))}
+                        {products.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={3}>
+                                    <Typography align="center">Your cart is empty</Typography>
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
