@@ -62,15 +62,20 @@ export const addProductToCart = async (
 
 export const createCart = async (uid: string): Promise<DocumentData | undefined | null> => {
     try {
-        const cart = await addDoc(collection(db, 'carts'), {
+        const cartRef = await addDoc(collection(db, 'carts'), {
             customer_id: uid.toLowerCase(),
             status: 'created',
             product_id: [],
         });
 
-        return cart;
+        // Fetch the newly created cart to return its data
+        const cartSnapshot = await getDoc(cartRef);
+        const cartData = cartSnapshot.data();
+
+        return cartData;
     } catch (error) {
         console.error("Erreur lors de l'ajout du produit au panier :", error);
+        return null;
     }
 };
 
