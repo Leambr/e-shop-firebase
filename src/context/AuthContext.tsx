@@ -13,7 +13,7 @@ interface User {
     uuid: string;
     role: string;
     email: string;
-    basketId: string;
+    cartId: string;
 }
 
 interface AuthContextType {

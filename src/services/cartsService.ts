@@ -13,37 +13,37 @@ import {
     setDoc,
 } from 'firebase/firestore';
 
-export const getBasketId = async (): Promise<string> => {
-    const basketsCollection = collection(db, 'baskets');
-    const querySnapshot = await getDocs(basketsCollection);
+export const getCartId = async (): Promise<string> => {
+    const cartsCollection = collection(db, 'baskets');
+    const querySnapshot = await getDocs(cartsCollection);
 
-    let basketId: string | undefined;
+    let cartId: string | undefined;
     querySnapshot.forEach((doc) => {
-        basketId = doc.id;
+        cartId = doc.id;
     });
 
-    return basketId || '';
+    return cartId || '';
 };
 
-export const addProductToBasket = async (
-    basketId: string,
+export const addProductToCart = async (
+    cartId: string,
     productId: string,
     label: string,
     price: number
 ) => {
     try {
-        const basketRef = doc(db, 'baskets', basketId);
-        const basketSnapshot = await getDoc(basketRef);
-        if (basketSnapshot.exists()) {
-            const basketData = basketSnapshot.data();
-            if (Object.prototype.hasOwnProperty.call(basketData, 'product_id')) {
-                await updateDoc(basketRef, {
+        const cartRef = doc(db, 'baskets', cartId);
+        const cartSnapshot = await getDoc(cartRef);
+        if (cartSnapshot.exists()) {
+            const cartData = cartSnapshot.data();
+            if (Object.prototype.hasOwnProperty.call(cartData, 'product_id')) {
+                await updateDoc(cartRef, {
                     product_id: arrayUnion(productId),
                     products: arrayUnion({ id: productId, label, price }),
                 });
             } else {
                 await setDoc(
-                    basketRef,
+                    cartRef,
                     {
                         product_id: [productId],
                         products: [{ id: productId, label, price }],
@@ -59,34 +59,34 @@ export const addProductToBasket = async (
     }
 };
 
-export const createBasket = async (uid: string): Promise<DocumentData | undefined | null> => {
+export const createCart = async (uid: string): Promise<DocumentData | undefined | null> => {
     try {
-        const basket = await addDoc(collection(db, 'baskets'), {
+        const cart = await addDoc(collection(db, 'baskets'), {
             customer_id: uid.toLowerCase(),
             status: 'created',
             product_id: [],
         });
 
-        return basket;
+        return cart;
     } catch (error) {
         console.error("Erreur lors de l'ajout du produit au panier :", error);
     }
 };
 
-export const getBasketByUserId = async (uid: string): Promise<DocumentData | undefined | null> => {
+export const getCartByUserId = async (uid: string): Promise<DocumentData | undefined | null> => {
     try {
         const lowerCaseUserId = uid.toLowerCase();
-        const basketQuery = query(
+        const cartQuery = query(
             collection(db, 'baskets'),
             where('customer_id', '==', lowerCaseUserId),
             where('status', '==', 'created')
         );
 
-        const basketSnapshot = await getDocs(basketQuery);
+        const cartSnapshot = await getDocs(cartQuery);
 
-        if (!basketSnapshot.empty) {
-            const basketData = basketSnapshot.docs[0].data();
-            return basketData;
+        if (!cartSnapshot.empty) {
+            const cartData = cartSnapshot.docs[0].data();
+            return cartData;
         }
 
         console.log(`No document found with ID ${uid} in the 'baskets' collection`);

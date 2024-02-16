@@ -1,11 +1,11 @@
 import { useAuthContext } from '../../context/AuthContext';
 import { getAllProducts } from '../../services/productsService';
 import {
-    createBasket,
-    getBasketByUserId,
-    addProductToBasket,
-    getBasketId,
-} from '../../services/basketsService';
+    createCart,
+    getCartByUserId,
+    addProductToCart,
+    getCartId,
+} from '../../services/cartsService';
 import { useEffect, useState } from 'react';
 import ProductPage from '../Product/ProductPage';
 
@@ -16,7 +16,7 @@ interface Product {
     img?: string;
     seller_id?: string;
 }
-interface Basket {
+interface Cart {
     id: string;
     product_id: string[];
     status: string;
@@ -25,7 +25,7 @@ interface Basket {
 
 export default function CustomerPage() {
     const [products, setProducts] = useState<Product[]>([]);
-    const [basket, setBasket] = useState<Basket>();
+    const [cart, setCart] = useState<Cart>();
     const { user } = useAuthContext();
 
     const fetchProducts = async () => {
@@ -41,36 +41,36 @@ export default function CustomerPage() {
     useEffect(() => {
         fetchProducts();
         if (user && user.uuid) {
-            getBasket();
+            getCart();
         }
     }, [user]);
 
-    const handleAddToBasket = async (productId: string, label: string, price: number) => {
-        const currentBasketId = await getBasketId();
+    const handleAddToCart = async (productId: string, label: string, price: number) => {
+        const currentCartId = await getCartId();
 
         try {
-            await addProductToBasket(currentBasketId, productId, label, price);
-            getBasket();
+            await addProductToCart(currentCartId, productId, label, price);
+            getCart();
         } catch (error) {
             console.log(error);
         }
     };
 
-    const getBasket = async () => {
+    const getCart = async () => {
         if (user && user.uuid) {
-            const currentBasket = await getBasketByUserId(user.uuid);
+            const currentCart = await getCartByUserId(user.uuid);
 
-            if (currentBasket === null || currentBasket === undefined) {
+            if (currentCart === null || currentCart === undefined) {
                 console.log("Aucun panier trouvé, création d'un nouveau panier");
 
-                const newBasket = await createBasket(user.uuid);
+                const newCart = await createCart(user.uuid);
 
-                setBasket(newBasket as Basket);
+                setCart(newCart as Cart);
             }
             console.log('Panier existant trouvé');
-            console.log('curr basket', currentBasket);
+            console.log('curr cart', currentCart);
 
-            setBasket(currentBasket as Basket);
+            setCart(currentCart as Cart);
         }
     };
 
@@ -85,14 +85,13 @@ export default function CustomerPage() {
                             <td>{prod.price}</td>
                             <td>{prod.img}</td>
                             <td>
-                                {basket && (
+                                {cart && (
                                     <button
                                         onClick={() =>
-                                            handleAddToBasket(prod.id, prod.label, prod.price)
+                                            handleAddToCart(prod.id, prod.label, prod.price)
                                         }
                                     >
-                                        {basket.product_id &&
-                                        basket.product_id.indexOf(prod.id) !== -1
+                                        {cart.product_id && cart.product_id.indexOf(prod.id) !== -1
                                             ? 'Done'
                                             : 'Add'}
                                     </button>
