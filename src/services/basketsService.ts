@@ -25,7 +25,12 @@ export const getBasketId = async (): Promise<string> => {
     return basketId || '';
 };
 
-export const addProductToBasket = async (basketId: string, productId: string) => {
+export const addProductToBasket = async (
+    basketId: string,
+    productId: string,
+    label: string,
+    price: number
+) => {
     try {
         const basketRef = doc(db, 'baskets', basketId);
         const basketSnapshot = await getDoc(basketRef);
@@ -34,12 +39,14 @@ export const addProductToBasket = async (basketId: string, productId: string) =>
             if (Object.prototype.hasOwnProperty.call(basketData, 'product_id')) {
                 await updateDoc(basketRef, {
                     product_id: arrayUnion(productId),
+                    products: arrayUnion({ id: productId, label, price }),
                 });
             } else {
                 await setDoc(
                     basketRef,
                     {
                         product_id: [productId],
+                        products: [{ id: productId, label, price }],
                     },
                     { merge: true }
                 );
