@@ -6,6 +6,7 @@ import ProtectedRoute from '../ProtectedRoute';
 import Homepage from '../../pages/Homepage/Homepage';
 import ProductPage from '../../pages/Product/ProductPage';
 import ShoppingCartPage from '../../pages/ShoppingCart/ShoppingCartPage';
+import Orders from '../../pages/Orders/Orders';
 
 export const routes = createBrowserRouter([
     {
@@ -29,11 +30,16 @@ export const routes = createBrowserRouter([
                 element: <SignUp role="Customer" />,
             },
             {
+                path: '/orders',
+                element: <Orders />,
+            },
+            {
                 path: '/homepage',
                 element: (
-                    <ProtectedRoute>
-                        <Homepage />
-                    </ProtectedRoute>
+                    <Homepage />
+                    // <ProtectedRoute>
+                    //     <Homepage />
+                    // </ProtectedRoute>
                 ),
             },
             {
