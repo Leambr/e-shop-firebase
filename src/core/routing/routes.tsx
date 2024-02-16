@@ -4,6 +4,7 @@ import SignIn from '../../components/SignIn/SignIn';
 import SignUp from '../../components/SignUp/SignUp';
 import ProtectedRoute from '../ProtectedRoute';
 import Homepage from '../../pages/Homepage/Homepage';
+import Orders from '../../pages/Orders/Orders';
 
 export const routes = createBrowserRouter([
     {
@@ -27,11 +28,16 @@ export const routes = createBrowserRouter([
                 element: <SignUp role="Customer" />,
             },
             {
+                path: '/orders',
+                element: <Orders />,
+            },
+            {
                 path: '/homepage',
                 element: (
-                    <ProtectedRoute>
-                        <Homepage />
-                    </ProtectedRoute>
+                    <Homepage />
+                    // <ProtectedRoute>
+                    //     <Homepage />
+                    // </ProtectedRoute>
                 ),
             },
         ],

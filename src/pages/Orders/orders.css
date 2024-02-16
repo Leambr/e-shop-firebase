@@ -1,0 +1,14 @@
+.order {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.orderRow {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px;
+    border-radius: 8px;
+}
