@@ -1,26 +1,28 @@
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
 
-// import ProductSort from '../product-sort';
-// import ProductFilters from '../product-filters';
-// import ProductCartWidget from '../product-cart-widget';
+import { useEffect, useState } from 'react';
 import ProductCard from '../../components/ProductCard/ProductCard';
-import { products } from '../../_mock/product';
+import { Product } from '../../components/ShoppingCart/ShoppingCart';
+import { getAllProducts } from '../../services/productsService';
 import s from './ProductPage.module.css';
 
-// ----------------------------------------------------------------------
-
 export default function ProductPage() {
-    // const [openFilter, setOpenFilter] = useState(false);
+    const [products, setProducts] = useState<Product[]>([]);
 
-    // const handleOpenFilter = () => {
-    //     setOpenFilter(true);
-    // };
+    const fetchProducts = async () => {
+        try {
+            const allProducts = await getAllProducts();
+            setProducts(allProducts);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des produits :', error);
+        }
+    };
 
-    // const handleCloseFilter = () => {
-    //     setOpenFilter(false);
-    // };
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
     return (
         <div className={s.container}>
@@ -35,15 +37,7 @@ export default function ProductPage() {
                 justifyContent="flex-end"
                 sx={{ mb: 5 }}
             >
-                <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-                    {/* <ProductFilters
-                        openFilter={openFilter}
-                        onOpenFilter={handleOpenFilter}
-                        onCloseFilter={handleCloseFilter}
-                    />
-
-                    <ProductSort /> */}
-                </Stack>
+                <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}></Stack>
             </Stack>
 
             <Grid container spacing={3}>
@@ -53,7 +47,6 @@ export default function ProductPage() {
                     </Grid>
                 ))}
             </Grid>
-            {/* <ProductCartWidget /> */}
         </div>
     );
 }
