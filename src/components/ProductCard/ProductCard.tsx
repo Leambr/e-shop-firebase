@@ -105,11 +105,25 @@ export default function ShopProductCard({ product }: { product: Product }) {
                             m: 'auto',
                         }}
                         onClick={() => handleAddToCart(product.id, product.label, product.price)}
-                        disabled={!cart} // Disable button if cart is still loading
+                        disabled={!cart}
                     >
-                        {cart && cart.product_id && cart.product_id.indexOf(product.id) !== -1
-                            ? 'Product already in cart'
-                            : 'Add to cart'}
+                        Add to cart
+                    </Button>
+                )}
+                {cart && cart.product_id && cart.product_id.indexOf(product.id) !== -1 && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            m: 'auto',
+                        }}
+                        disabled={!cart}
+                    >
+                        Product already in cart
                     </Button>
                 )}
             </Box>
