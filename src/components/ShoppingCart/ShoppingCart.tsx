@@ -13,6 +13,7 @@ import {
 import { Delete } from '@mui/icons-material';
 import { useAuthContext } from '../../context/AuthContext';
 import { deleteProductFromCart, getCartByUserId, getCartId } from '../../services/cartsService';
+import { useCartContext } from '../../context/CartContext';
 
 export interface Product {
     id: string;
@@ -31,27 +32,22 @@ export interface Cart {
 
 export const ShoppingCart = () => {
     const { user } = useAuthContext();
-    const [cart, setCart] = useState<Cart>();
-    console.log('🚀 ~ ShoppingCart ~ cart:', cart);
+    const { cart, setCart } = useCartContext();
 
-    const getCart = async () => {
-        if (user && user.uuid) {
-            const currentCart = await getCartByUserId(user.uuid);
+    if (!cart) {
+        return null;
+    }
 
-            if (currentCart === null || currentCart === undefined) {
-                return null;
-            }
-
-            setCart(currentCart as Cart);
-        }
-    };
+    const { products } = cart;
 
     const handleDeleteProduct = async (productId: string) => {
         const currentCartId = await getCartId(user.uuid);
 
         try {
             await deleteProductFromCart(currentCartId, productId);
-            getCart();
+            const updatedCart = await getCartByUserId(user.uuid);
+            setCart(updatedCart as Cart);
+
             cartTotal();
         } catch (error) {
             console.log(error);
@@ -70,16 +66,6 @@ export const ShoppingCart = () => {
         );
         return total;
     };
-
-    useEffect(() => {
-        getCart();
-    }, [user.uuid]);
-
-    if (!cart) {
-        return null;
-    }
-
-    const { products } = cart;
 
     return (
         <>
@@ -125,7 +111,7 @@ export const ShoppingCart = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {cartTotal() !== 0 && (
+            {products && cartTotal() !== 0 && (
                 <Typography align="right" variant="h6">
                     Total : {cartTotal()}&nbsp;&euro;
                 </Typography>

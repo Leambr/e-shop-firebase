@@ -1,49 +1,28 @@
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+// import { useAuthContext } from '../../context/AuthContext';
+import { useCartContext } from '../../context/CartContext';
 import { Cart, Product } from '../ShoppingCart/ShoppingCart';
+import { addProductToCart, getCartByUserId, getCartId } from '../../services/cartsService';
 import { useAuthContext } from '../../context/AuthContext';
-import {
-    addProductToCart,
-    createCart,
-    getCartByUserId,
-    getCartId,
-} from '../../services/cartsService';
 
 export default function ShopProductCard({ product }: { product: Product }) {
     const [isHovered, setIsHovered] = useState(false);
-    const [cart, setCart] = useState<Cart>();
 
     const { user } = useAuthContext();
-
-    const getCart = async () => {
-        if (user && user.uuid) {
-            const currentCart = await getCartByUserId(user.uuid);
-
-            if (currentCart === null || currentCart === undefined) {
-                console.log("Aucun panier trouvé, création d'un nouveau panier");
-
-                const newCart = await createCart(user.uuid);
-
-                setCart(newCart as Cart);
-                return newCart;
-            }
-            console.log('Panier existant trouvé');
-            setCart(currentCart as Cart);
-            return currentCart;
-        }
-    };
+    const { cart, setCart } = useCartContext();
 
     const handleAddToCart = async (productId: string, label: string, price: number) => {
         const currentCartId = await getCartId(user.uuid);
 
         try {
             await addProductToCart(currentCartId, productId, label, price);
-            const updatedCart = await getCart();
+            const updatedCart = await getCartByUserId(user.uuid);
             setCart(updatedCart as Cart);
         } catch (error) {
             console.log(error);
@@ -53,12 +32,6 @@ export default function ShopProductCard({ product }: { product: Product }) {
     const handleImageHover = () => {
         setIsHovered(!isHovered);
     };
-
-    useEffect(() => {
-        if (user && user.uuid) {
-            getCart();
-        }
-    }, [user]);
 
     const renderImg = (
         <Box
