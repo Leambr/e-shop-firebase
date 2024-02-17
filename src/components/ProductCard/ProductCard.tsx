@@ -46,7 +46,7 @@ export default function ShopProductCard({ product }: { product: Product }) {
     };
 
     const handleAddToCart = async (productId: string, label: string, price: number) => {
-        const currentCartId = await getCartId();
+        const currentCartId = await getCartId(user.uuid);
 
         try {
             await addProductToCart(currentCartId, productId, label, price);

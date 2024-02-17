@@ -47,7 +47,7 @@ export const ShoppingCart = () => {
     };
 
     const handleDeleteProduct = async (productId: string) => {
-        const currentCartId = await getCartId();
+        const currentCartId = await getCartId(user.uuid);
 
         try {
             await deleteProductFromCart(currentCartId, productId);

@@ -14,9 +14,13 @@ import {
     setDoc,
 } from 'firebase/firestore';
 
-export const getCartId = async (): Promise<string> => {
+export const getCartId = async (userId: string): Promise<string> => {
+    const lowerCaseUserId = userId.toLowerCase();
+
     const cartsCollection = collection(db, 'carts');
-    const querySnapshot = await getDocs(cartsCollection);
+    const querySnapshot = await getDocs(
+        query(cartsCollection, where('customer_id', '==', lowerCaseUserId))
+    );
 
     let cartId: string | undefined;
     querySnapshot.forEach((doc) => {
