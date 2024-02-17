@@ -52,9 +52,23 @@ export const ShoppingCart = () => {
         try {
             await deleteProductFromCart(currentCartId, productId);
             getCart();
+            cartTotal();
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const cartTotal = () => {
+        if (!cart) {
+            return 0;
+        }
+
+        const { products } = cart;
+        const total = products.reduce(
+            (acc, product) => acc + parseFloat(product.price.toString()), //to handle float number
+            0
+        );
+        return total;
     };
 
     useEffect(() => {
@@ -66,7 +80,6 @@ export const ShoppingCart = () => {
     }
 
     const { products } = cart;
-    console.log('🚀 ~ ShoppingCart ~ products:', products);
 
     return (
         <>
@@ -91,7 +104,10 @@ export const ShoppingCart = () => {
                                     <TableCell component="th" scope="row">
                                         {product.label}
                                     </TableCell>
-                                    <TableCell align="right">{product.price}</TableCell>
+                                    <TableCell align="right">
+                                        {product.price}
+                                        &nbsp;&euro;
+                                    </TableCell>
                                     <TableCell align="right">
                                         <IconButton onClick={() => handleDeleteProduct(product.id)}>
                                             <Delete color="primary" />
@@ -109,6 +125,11 @@ export const ShoppingCart = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {cartTotal() !== 0 && (
+                <Typography align="right" variant="h6">
+                    Total : {cartTotal()}&nbsp;&euro;
+                </Typography>
+            )}
             {products === undefined && <Typography align="center">Your cart is empty</Typography>}
         </>
     );
