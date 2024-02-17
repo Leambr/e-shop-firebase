@@ -22,26 +22,19 @@ export default function ShopProductCard({ product }: { product: Product }) {
 
     const getCart = async () => {
         if (user && user.uuid) {
-            try {
-                const currentCart = await getCartByUserId(user.uuid);
-                return currentCart;
-            } catch (error) {
-                console.error('Erreur lors de la récupération du panier :', error);
-                return null;
-            }
-        }
-        return null;
-    };
+            const currentCart = await getCartByUserId(user.uuid);
 
-    const isCartExisting = async () => {
-        const currentCart = await getCart();
-        if (!currentCart) {
-            const newCart = await createCart(user.uuid);
-            setCart(newCart as Cart);
-            console.log('Création du nouveau panier');
-        } else {
-            setCart(currentCart as Cart);
+            if (currentCart === null || currentCart === undefined) {
+                console.log("Aucun panier trouvé, création d'un nouveau panier");
+
+                const newCart = await createCart(user.uuid);
+
+                setCart(newCart as Cart);
+                return newCart;
+            }
             console.log('Panier existant trouvé');
+            setCart(currentCart as Cart);
+            return currentCart;
         }
     };
 
@@ -63,7 +56,7 @@ export default function ShopProductCard({ product }: { product: Product }) {
 
     useEffect(() => {
         if (user && user.uuid) {
-            isCartExisting();
+            getCart();
         }
     }, [user]);
 
