@@ -97,7 +97,7 @@ export default function OrdersPage() {
     }, [user]);
 
     return (
-        <div>
+        <div className={s.container}>
             <Typography variant="titleL" sx={{ mb: 5 }}>
                 Orders
             </Typography>
@@ -123,7 +123,7 @@ export default function OrdersPage() {
                                 onClick={() => handleClick(order.orderId)}
                             >
                                 <div className={s.orderRowCommandTitle}>
-                                    <Typography variant="h5">Order ID : {order.orderId}</Typography>
+                                    <Typography variant="titleS">Order ID : {order.orderId}</Typography>
                                 </div>
                             </ListItemButton>
                             <Collapse
