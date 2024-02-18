@@ -1,62 +1,37 @@
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+// import { useAuthContext } from '../../context/AuthContext';
+import { useCartContext } from '../../context/CartContext';
 import { Cart, Product } from '../ShoppingCart/ShoppingCart';
+import { addProductToCart, getCartByUserId, getCartId } from '../../services/cartsService';
 import { useAuthContext } from '../../context/AuthContext';
-import {
-    addProductToCart,
-    createCart,
-    getCartByUserId,
-    getCartId,
-} from '../../services/cartsService';
 
 export default function ShopProductCard({ product }: { product: Product }) {
     const [isHovered, setIsHovered] = useState(false);
-    const [cart, setCart] = useState<Cart>();
 
     const { user } = useAuthContext();
+    const { cart, setCart } = useCartContext();
 
     const handleAddToCart = async (productId: string, label: string, price: number) => {
-        const currentCartId = await getCartId();
+        const currentCartId = await getCartId(user.uuid);
 
         try {
             await addProductToCart(currentCartId, productId, label, price);
-            getCart();
+            const updatedCart = await getCartByUserId(user.uuid);
+            setCart(updatedCart as Cart);
         } catch (error) {
             console.log(error);
-        }
-    };
-
-    const getCart = async () => {
-        if (user && user.uuid) {
-            const currentCart = await getCartByUserId(user.uuid);
-
-            if (currentCart === null || currentCart === undefined) {
-                console.log("Aucun panier trouvé, création d'un nouveau panier");
-
-                const newCart = await createCart(user.uuid);
-
-                setCart(newCart as Cart);
-            }
-            console.log('Panier existant trouvé');
-
-            setCart(currentCart as Cart);
         }
     };
 
     const handleImageHover = () => {
         setIsHovered(!isHovered);
     };
-
-    useEffect(() => {
-        if (user && user.uuid) {
-            getCart();
-        }
-    }, [user]);
 
     const renderImg = (
         <Box
@@ -84,7 +59,7 @@ export default function ShopProductCard({ product }: { product: Product }) {
         <Card onMouseEnter={handleImageHover} onMouseLeave={handleImageHover}>
             <Box sx={{ pt: '100%', position: 'relative' }}>
                 {renderImg}
-                {isHovered && cart && (
+                {isHovered && (
                     <Button
                         variant="contained"
                         color="primary"
@@ -96,10 +71,25 @@ export default function ShopProductCard({ product }: { product: Product }) {
                             m: 'auto',
                         }}
                         onClick={() => handleAddToCart(product.id, product.label, product.price)}
+                        disabled={!cart}
                     >
-                        {cart.product_id && cart.product_id.indexOf(product.id) !== -1
-                            ? 'Product already in cart'
-                            : 'Add to cart'}
+                        Add to cart
+                    </Button>
+                )}
+                {cart && cart.product_id && cart.product_id.indexOf(product.id) !== -1 && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            m: 'auto',
+                        }}
+                        disabled={!cart}
+                    >
+                        Product already in cart
                     </Button>
                 )}
             </Box>
