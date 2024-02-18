@@ -5,5 +5,6 @@ import { useAuthContext } from '../../context/AuthContext';
 export default function Homepage() {
     const { user } = useAuthContext();
 
-    return <div>{user?.role === 'seller' ? <SellerPage /> : <CustomerPage />}</div>;
+    // return <div>{user?.role === 'seller' ? <SellerPage /> : <CustomerPage />}</div>;
+    return <div><CustomerPage /> </div>;
 }
