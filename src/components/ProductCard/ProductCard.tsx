@@ -17,11 +17,17 @@ export default function ShopProductCard({ product }: { product: Product }) {
     const { user } = useAuthContext();
     const { cart, setCart } = useCartContext();
 
-    const handleAddToCart = async (productId: string, label: string, price: number) => {
+    const handleAddToCart = async (
+        productId: string,
+        label: string,
+        price: number,
+        img: string,
+        sellerId: string
+    ) => {
         const currentCartId = await getCartId(user.uuid);
 
         try {
-            await addProductToCart(currentCartId, productId, label, price);
+            await addProductToCart(currentCartId, productId, label, price, img, sellerId);
             const updatedCart = await getCartByUserId(user.uuid);
             setCart(updatedCart as Cart);
         } catch (error) {
@@ -70,13 +76,21 @@ export default function ShopProductCard({ product }: { product: Product }) {
                             right: 0,
                             m: 'auto',
                         }}
-                        onClick={() => handleAddToCart(product.id, product.label, product.price)}
+                        onClick={() =>
+                            handleAddToCart(
+                                product.id,
+                                product.label,
+                                product.price,
+                                product.img,
+                                product.seller_id
+                            )
+                        }
                         disabled={!cart}
                     >
                         Add to cart
                     </Button>
                 )}
-                {cart && cart.product_id && cart.product_id.indexOf(product.id) !== -1 && (
+                {cart && cart.product_id && cart.product_id.includes(product.id) && (
                     <Button
                         variant="contained"
                         color="primary"

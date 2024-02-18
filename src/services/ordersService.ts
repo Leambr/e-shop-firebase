@@ -1,5 +1,13 @@
 import { db } from '../config/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    addDoc,
+    DocumentData,
+    getDoc,
+} from 'firebase/firestore';
 
 export interface Order {
     orderId: string;
@@ -11,11 +19,11 @@ export interface Product {
     id: string;
     label: string;
     price: number;
-    img?: string;
+    img: string;
     seller_id?: string;
 }
 export const getOrdersByCustomerId = async (customerId: string): Promise<Order[]> => {
-    const ordersQuery = query(collection(db, 'orders'), where('customer_id', '==', customerId));
+    const ordersQuery = query(collection(db, 'orders'), where('customerId', '==', customerId));
     const querySnapshot = await getDocs(ordersQuery);
     const orders: Order[] = querySnapshot.docs.map((doc) => {
         const data = doc.data();
@@ -27,4 +35,24 @@ export const getOrdersByCustomerId = async (customerId: string): Promise<Order[]
         };
     });
     return orders;
+};
+export const createOrder = async (
+    customerId: string,
+    products: Product[]
+): Promise<DocumentData | undefined | null> => {
+    try {
+        const orderRef = await addDoc(collection(db, 'orders'), {
+            customerId: customerId,
+            date: new Date().toISOString(),
+            products: products,
+        });
+
+        const orderSnapshot = await getDoc(orderRef);
+        const orderData = orderSnapshot.data();
+
+        return orderData;
+    } catch (error) {
+        console.error('Erreur lors de la création de la commande :', error);
+        return null;
+    }
 };
