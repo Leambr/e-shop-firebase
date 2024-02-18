@@ -33,7 +33,7 @@ export const routes = createBrowserRouter([
                 path: '/orders',
                 element: (
                     <ProtectedRoute>
-                        <Orders />,
+                        <Orders />
                     </ProtectedRoute>
                 ),
             },

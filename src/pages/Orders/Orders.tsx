@@ -1,6 +1,7 @@
 import { useAuthContext } from '../../context/AuthContext';
 import { useState, useEffect, SetStateAction } from 'react';
-import { getOrdersByCustomerId } from '../../services/ordersService';
+import { getOrdersByCustomerId, getOrdersBySellerId } from '../../services/ordersService';
+import { Timestamp } from 'firebase/firestore';
 
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -9,6 +10,15 @@ import Collapse from '@mui/material/Collapse';
 import OrderProductCard from '../../components/OrderProductCard/OrderProductCard';
 
 import s from './Orders.module.css';
+import { 
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+ } from '@mui/material';
 
 interface Order {
     orderId: string;
@@ -37,20 +47,18 @@ export default function OrdersPage() {
     const [orderOpened, setOrderOpened] = useState<string>();
     const { user } = useAuthContext();
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            if (!user || !user.uuid) {
-                return;
-            }
-            try {
-                const allOrders: Order[] = await getOrdersByCustomerId(user.uuid);
-                setOrders(allOrders);
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-            }
-        };
-        fetchOrders();
-    }, [user]);
+    function formatDate(inputDate: string): string {
+        const date = new Date(inputDate);
+      
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+      
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+      }
+
 
     const handleClick = (orderId: SetStateAction<string | undefined>) => {
         if (orderId == orderOpened) {
@@ -60,12 +68,41 @@ export default function OrdersPage() {
         }
     };
 
+    const fetchOrdersByCustomerId = async () => {
+        try {
+            const allOrders: Order[] = await getOrdersByCustomerId(user.uuid);
+            setOrders(allOrders);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    };
+
+    const fetchOrdersBySellerId = async () => {
+        try {
+            const allOrders: Order[] = await getOrdersBySellerId(user.uuid);
+            setOrders(allOrders);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (user.uuid) {
+            if (user.role === 'customer') {
+                fetchOrdersByCustomerId();
+            } else if (user.role === 'seller') {
+                fetchOrdersBySellerId();
+            }
+        }
+    }, [user]);
+
     return (
         <div>
             <Typography variant="titleL" sx={{ mb: 5 }}>
                 Orders
             </Typography>
 
+            {user.role === 'customer' && (
             <List
                 className={s.orderRow}
                 sx={{
@@ -114,6 +151,63 @@ export default function OrdersPage() {
                     <Typography align="center">You don't have any orders</Typography>
                 )}
             </List>
+            )}
+
+            {user.role === 'seller' && (
+                <TableContainer component={Paper} elevation={1}>
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell style={{ color: '#808080' }}>Products</TableCell>
+                            <TableCell align="right" style={{ color: '#808080' }}>
+                                Price
+                            </TableCell>
+                            <TableCell align="right" style={{ color: '#808080' }}>
+                                Customer
+                            </TableCell>
+
+                            <TableCell align="right" style={{ color: '#808080' }}>
+                                Date
+                            </TableCell>
+                            <TableCell align="right" style={{ color: '#808080' }}></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {orders &&
+                        orders.map((order, index) => (
+                            <TableRow
+                                key={index}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {order.products.map((product) => (
+                                        <div key={product.id}>
+                                            <Typography>{product.label}</Typography>
+                                        </div>
+                                    ))}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {order.products.map((product) => (
+                                        <div key={product.id}>
+                                            <Typography>
+                                                {product.price}
+                                                &nbsp;&euro;
+                                            </Typography>
+                                        </div>
+                                    ))}
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Typography>{order.customerId}</Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Typography>{formatDate(order.date)}</Typography>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            )}
         </div>
     );
 }

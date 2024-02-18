@@ -19,8 +19,8 @@ export interface Product {
     id: string;
     label: string;
     price: number;
-    img: string;
-    seller_id?: string;
+    img?: string;
+    sellerId?: string;
 }
 export const getOrdersByCustomerId = async (customerId: string): Promise<Order[]> => {
     const ordersQuery = query(collection(db, 'orders'), where('customerId', '==', customerId));
@@ -55,4 +55,20 @@ export const createOrder = async (
         console.error('Erreur lors de la création de la commande :', error);
         return null;
     }
+};
+
+export const getOrdersBySellerId = async (sellerId: string): Promise<any> => {
+    const ordersQuery = query(collection(db, 'orders'));
+    const querySnapshot = await getDocs(ordersQuery);
+    const orders: Order[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        const filteredProducts = data.products.filter((product: Product) => product.sellerId === sellerId);
+        return {
+            orderId: doc.id,
+            customerId: data.customerId,
+            date: data.date,
+            products: filteredProducts,
+        };
+    });
+    return orders;
 };

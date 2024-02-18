@@ -111,10 +111,21 @@ export default function SignUp(props: { role: string }) {
                     </Button>
 
                     <Grid container>
-                        <Grid item>
+                        <Grid item sx={{display: 'flex', flexDirection: 'column'}}>
                             <Link component={RouterLink} to={`/sign-in`} variant="body2">
                                 {'Already have an account? Sign in'}
                             </Link>
+
+                            {props.role === 'Customer' && (
+                                <Link component={RouterLink} to={`/seller/sign-up`} variant="body2">
+                                    {'Seller Sign Up'}
+                                </Link>
+                            )}
+                            {props.role === 'Seller' && (
+                                <Link component={RouterLink} to={`/customer/sign-up`} variant="body2">
+                                    {'Customer Sign Up'}
+                                </Link>
+                            )}
                         </Grid>
                     </Grid>
                 </Box>
