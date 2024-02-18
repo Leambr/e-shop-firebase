@@ -1,4 +1,6 @@
-import { createTheme } from '@mui/material';
+// import { createTheme } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+
 
 export const theme = createTheme({
     palette: {
@@ -60,27 +62,17 @@ export const theme = createTheme({
                 },
             },
         },
-        // MuiDivider: {
-        //     styleOverrides: {
-        //         root: {
-        //             margin: 0,
-        //         },
-        //     },
-        // },
-        // MuiMenu: {
-        //     styleOverrides: {
-        //         list: {
-        //             padding: 0,
-        //         },
-        //     },
-        // },
-        // MuiMenuItem: {
-        //     styleOverrides: {
-        //         divider: {
-        //             paddingTop: 12,
-        //             paddingBottom: 12,
-        //         },
-        //     },
-        // },
+        MuiTableCell: {
+            variants: [
+                {
+                    props: { variant: 'titleS' },
+                    style: {
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        lineHeight: '1.5rem',
+                    },
+                },
+            ],
+        },
     },
 });

@@ -4,6 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { theme } from '../mui-design-system/ThemeProvider';
 import { Container, CssBaseline } from '@mui/material';
 import Navbar from '../components/Navbar/Navbar';
+import { CartProvider } from '../context/CartContext';
 
 export const Layout = () => {
     const token = localStorage.getItem('token');
@@ -19,10 +20,12 @@ export const Layout = () => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <>
-                {shouldDisplayNavbar && <Navbar />}
-                <Container maxWidth="md">
-                    <Outlet />
-                </Container>
+                <CartProvider>
+                    {shouldDisplayNavbar && <Navbar />}
+                    <Container maxWidth="md">
+                        <Outlet />
+                    </Container>
+                </CartProvider>
             </>
         </ThemeProvider>
     );

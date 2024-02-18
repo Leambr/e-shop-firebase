@@ -65,7 +65,6 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                         </ListItem>
                         <ListItemButton
                             onClick={onClose}
-                            //mettre la bonne route pour rediriger sur la bonne page
                             href="/products"
                             sx={{
                                 padding: '12px 32px',
@@ -75,12 +74,12 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                         </ListItemButton>
                         <ListItemButton
                             onClick={onClose}
-                            href="/basket"
+                            href="/cart"
                             sx={{
                                 padding: '12px 32px',
                             }}
                         >
-                            Basket
+                            Your cart
                         </ListItemButton>
                     </List>
                     <List
