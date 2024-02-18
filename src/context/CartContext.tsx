@@ -1,13 +1,6 @@
-import React, {
-    createContext,
-    useState,
-    useEffect,
-    PropsWithChildren,
-    useContext,
-    useMemo,
-} from 'react';
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import { Cart } from '../components/ShoppingCart/ShoppingCart';
-import { getCartByUserId, createCart } from '../services/cartsService';
+import { createCart, getCartByUserId } from '../services/cartsService';
 import { useAuthContext } from './AuthContext';
 
 interface CartContextType {

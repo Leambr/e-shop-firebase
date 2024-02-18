@@ -4,12 +4,11 @@ import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
-// import { useAuthContext } from '../../context/AuthContext';
-import { useCartContext } from '../../context/CartContext';
-import { Cart, Product } from '../ShoppingCart/ShoppingCart';
-import { addProductToCart, getCartByUserId, getCartId } from '../../services/cartsService';
+import { useState } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
+import { useCartContext } from '../../context/CartContext';
+import { addProductToCart, getCartByUserId, getCartId } from '../../services/cartsService';
+import { Cart, Product } from '../ShoppingCart/ShoppingCart';
 
 export default function ShopProductCard({ product }: { product: Product }) {
     const [isHovered, setIsHovered] = useState(false);

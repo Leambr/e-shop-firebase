@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { Delete } from '@mui/icons-material';
 import {
     IconButton,
     Paper,
@@ -10,10 +10,9 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import { Delete } from '@mui/icons-material';
 import { useAuthContext } from '../../context/AuthContext';
-import { deleteProductFromCart, getCartByUserId, getCartId } from '../../services/cartsService';
 import { useCartContext } from '../../context/CartContext';
+import { deleteProductFromCart, getCartByUserId, getCartId } from '../../services/cartsService';
 
 export interface Product {
     id: string;
