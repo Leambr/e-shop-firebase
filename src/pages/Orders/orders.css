@@ -1,14 +1,28 @@
 .order {
     display: flex;
-    justify-content: space-between;
     margin: 12px;
     border-radius: 8px;
-    padding: 16px;
+    padding-right: 16px;
 }
 
 .orderRow {
-    display: flex;
-    justify-content: space-between;
     margin: 12px;
     border-radius: 8px;
+    width: 100%;
+}
+
+.orderRowCommandTitle {
+    display: flex;
+    margin: 12px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.orderProductItem {
+    margin-right: 12px;
+}
+
+.products {
+    display: flex;
+    flex-direction: row;
 }

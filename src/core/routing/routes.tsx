@@ -31,15 +31,18 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/orders',
-                element: <Orders />,
+                element: (
+                    <ProtectedRoute>
+                        <Orders />,
+                    </ProtectedRoute>
+                ),
             },
             {
                 path: '/homepage',
                 element: (
-                    <Homepage />
-                    // <ProtectedRoute>
-                    //     <Homepage />
-                    // </ProtectedRoute>
+                    <ProtectedRoute>
+                        <Homepage />
+                    </ProtectedRoute>
                 ),
             },
             {
