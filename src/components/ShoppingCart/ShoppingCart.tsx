@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     IconButton,
     Paper,
     Table,
@@ -40,6 +45,15 @@ export interface Cart {
 export const ShoppingCart = () => {
     const { user } = useAuthContext();
     const { cart, setCart } = useCartContext();
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = async () => {
+        setOpen(false);
+    };
 
     if (!cart) {
         return null;
@@ -66,6 +80,7 @@ export const ShoppingCart = () => {
             await createOrder(user.uuid, products);
             if (user.uuid) {
                 await updateCartStatus(user.uuid);
+                handleClickOpen();
             } else {
                 console.error('Cart is not defined or missing id');
             }
@@ -146,6 +161,23 @@ export const ShoppingCart = () => {
                 </>
             )}
             {products === undefined && <Typography align="center">Your cart is empty</Typography>}
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Your order is completed"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                Thanks for your order. Please refresh the page to see the changes.
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };

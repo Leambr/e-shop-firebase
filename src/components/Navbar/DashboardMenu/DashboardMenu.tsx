@@ -144,6 +144,33 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                                 Products
                             </ListItemButton>
                         </List>
+
+                        <List
+                            sx={{
+                                marginBottom: '32px',
+                                padding: 0,
+                            }}
+                        >
+                            <ListItem
+                                sx={{
+                                    padding: '0 0 0 24px',
+                                    marginBottom: '4px',
+                                }}
+                            >
+                                <Typography variant="badge" color={'grey'}>
+                                    Orders
+                                </Typography>
+                            </ListItem>
+                            <ListItemButton
+                                onClick={onClose}
+                                href="/orders"
+                                sx={{
+                                    padding: '12px 32px',
+                                }}
+                            >
+                                See orders
+                            </ListItemButton>
+                        </List>
                     </div>
                 )}
             </Paper>

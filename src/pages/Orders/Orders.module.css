@@ -26,3 +26,11 @@
     display: flex;
     flex-direction: row;
 }
+
+
+.container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
