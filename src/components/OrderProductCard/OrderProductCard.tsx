@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
@@ -6,31 +5,18 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 // import { useAuthContext } from '../../context/AuthContext';
-import { useCartContext } from '../../context/CartContext';
-import { Cart, Product } from '../ShoppingCart/ShoppingCart';
-import { addProductToCart, getCartByUserId, getCartId } from '../../services/cartsService';
-import { useAuthContext } from '../../context/AuthContext';
 
-import './OrderProductCard.css';
+import s from './OrderProductCard.module.css';
+interface Product {
+    id: string;
+    label: string;
+    price: number;
+    img: string;
+    seller_id?: string;
+}
 
-export default function ShopProductCard({ product }: { product: Product }) {
+export default function OrderProductCard({ product }: { product: Product }) {
     const [isHovered, setIsHovered] = useState(false);
-
-    const { user } = useAuthContext();
-    const { cart, setCart } = useCartContext();
-
-    const handleAddToCart = async (productId: string, label: string, price: number) => {
-        const currentCartId = await getCartId(user.uuid);
-
-        try {
-            await addProductToCart(currentCartId, productId, label, price);
-            const updatedCart = await getCartByUserId(user.uuid);
-            setCart(updatedCart as Cart);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     const handleImageHover = () => {
         setIsHovered(!isHovered);
     };
@@ -59,7 +45,7 @@ export default function ShopProductCard({ product }: { product: Product }) {
 
     return (
         <Card
-            className="productCard"
+            className={s.productCard}
             onMouseEnter={handleImageHover}
             onMouseLeave={handleImageHover}
         >

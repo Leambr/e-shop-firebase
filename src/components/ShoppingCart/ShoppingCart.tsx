@@ -11,16 +11,23 @@ import {
     Typography,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
+import Button from '@mui/material/Button';
 import { useAuthContext } from '../../context/AuthContext';
-import { deleteProductFromCart, getCartByUserId, getCartId } from '../../services/cartsService';
+import {
+    deleteProductFromCart,
+    getCartByUserId,
+    getCartId,
+    updateCartStatus,
+} from '../../services/cartsService';
+import { createOrder } from '../../services/ordersService';
 import { useCartContext } from '../../context/CartContext';
 
 export interface Product {
     id: string;
     label: string;
     price: number;
-    img?: string;
-    seller_id?: string;
+    img: string;
+    seller_id: string;
 }
 export interface Cart {
     id: string;
@@ -54,6 +61,19 @@ export const ShoppingCart = () => {
         }
     };
 
+    const handleValidateCart = async () => {
+        try {
+            await createOrder(user.uuid, products);
+            if (user.uuid) {
+                await updateCartStatus(user.uuid);
+            } else {
+                console.error('Cart is not defined or missing id');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const cartTotal = () => {
         if (!cart) {
             return 0;
@@ -78,6 +98,7 @@ export const ShoppingCart = () => {
                                 Price
                             </TableCell>
                             <TableCell align="right" style={{ color: '#808080' }}></TableCell>
+                            <TableCell align="right" style={{ color: '#808080' }}></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -99,6 +120,9 @@ export const ShoppingCart = () => {
                                             <Delete color="primary" />
                                         </IconButton>
                                     </TableCell>
+                                    <TableCell align="right">
+                                        <IconButton></IconButton>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         {products && products.length === 0 && (
@@ -112,9 +136,14 @@ export const ShoppingCart = () => {
                 </Table>
             </TableContainer>
             {products && cartTotal() !== 0 && (
-                <Typography align="right" variant="h6">
-                    Total : {cartTotal()}&nbsp;&euro;
-                </Typography>
+                <>
+                    <Typography align="right" variant="h6">
+                        Total : {cartTotal()}&nbsp;&euro;
+                    </Typography>
+                    <Button onClick={() => handleValidateCart()} variant="contained">
+                        Validate your cart
+                    </Button>
+                </>
             )}
             {products === undefined && <Typography align="center">Your cart is empty</Typography>}
         </>

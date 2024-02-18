@@ -1,8 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { useState, useEffect, SetStateAction } from 'react';
 import { getOrdersByCustomerId } from '../../services/ordersService';
-import { Timestamp } from 'firebase/firestore';
 
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -10,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Collapse from '@mui/material/Collapse';
 import OrderProductCard from '../../components/OrderProductCard/OrderProductCard';
 
-import './orders.css';
+import s from './Orders.module.css';
 
 interface Order {
     orderId: string;
@@ -23,7 +21,7 @@ export interface Product {
     id: string;
     label: string;
     price: number;
-    img?: string;
+    img: string;
     seller_id?: string;
 }
 export interface Cart {
@@ -34,19 +32,7 @@ export interface Cart {
     userCustomerId: string;
 }
 
-function formatTimestamp(timestamp: Timestamp) {
-    const milliseconds = timestamp.seconds * 1000 + Math.floor(timestamp.nanoseconds / 1e6);
-
-    const date = new Date(milliseconds);
-
-    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-
-    return formattedDate;
-}
-
 export default function OrdersPage() {
-    const navigate = useNavigate();
-    const { Logout } = useAuthContext();
     const [orders, setOrders] = useState<Order[] | undefined>();
     const [orderOpened, setOrderOpened] = useState<string>();
     const { user } = useAuthContext();
@@ -74,21 +60,14 @@ export default function OrdersPage() {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            await Logout();
-            navigate('/sign-in');
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     return (
         <div>
-            <h1>Orders</h1>
+            <Typography variant="titleL" sx={{ mb: 5 }}>
+                Orders
+            </Typography>
 
             <List
-                className="orderRow"
+                className={s.orderRow}
                 sx={{
                     width: '100%',
                     bgcolor: 'background.paper',
@@ -106,11 +85,9 @@ export default function OrdersPage() {
                                 key={order.orderId}
                                 onClick={() => handleClick(order.orderId)}
                             >
-                                <div className="orderRowCommandTitle">
+                                <div className={s.orderRowCommandTitle}>
                                     <Typography variant="h5">Order ID : {order.orderId}</Typography>
                                 </div>
-
-                                <Typography variant="h5">{formatTimestamp(order.date)}</Typography>
                             </ListItemButton>
                             <Collapse
                                 in={orderOpened === order.orderId}
@@ -119,7 +96,7 @@ export default function OrdersPage() {
                             >
                                 <List
                                     key={order.orderId}
-                                    className="products"
+                                    className={s.products}
                                     component="div"
                                     disablePadding
                                 >
