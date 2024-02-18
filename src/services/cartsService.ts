@@ -19,7 +19,11 @@ export const getCartId = async (userId: string): Promise<string> => {
 
     const cartsCollection = collection(db, 'carts');
     const querySnapshot = await getDocs(
-        query(cartsCollection, where('customer_id', '==', lowerCaseUserId))
+        query(
+            cartsCollection,
+            where('customer_id', '==', lowerCaseUserId),
+            where('status', '==', 'created')
+        )
     );
 
     let cartId: string | undefined;
