@@ -39,7 +39,6 @@ export const AuthContextProvider: FunctionComponent<{ children: React.ReactNode 
 
     const SignIn = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
-            console.log('🚀 ~ returnsignInWithEmailAndPassword ~ userCredential:', userCredential);
             const currentUser = userCredential.user;
             const role = await getRoleByUserId(currentUser?.uid);
             const token = await currentUser?.getIdToken();
