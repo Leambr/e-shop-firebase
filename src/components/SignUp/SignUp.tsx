@@ -13,7 +13,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { addRole } from '../../services/rolesService';
 
-export default function SignUp(props: any) {
+export default function SignUp(props: { role: string }) {
     const navigate = useNavigate();
     const { CreateUser } = useAuthContext();
     const [email, setEmail] = useState<string>();
