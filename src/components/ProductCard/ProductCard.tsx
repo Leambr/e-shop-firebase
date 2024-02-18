@@ -25,9 +25,6 @@ export default function ShopProductCard({ product }: { product: Product }) {
         sellerId: string
     ) => {
         const currentCartId = await getCartId(user.uuid);
-        console.log(user.uuid);
-        console.log(currentCartId);
-        console.log(currentCartId, productId, label, price, img, sellerId);
 
         try {
             await addProductToCart(currentCartId, productId, label, price, img, sellerId);
