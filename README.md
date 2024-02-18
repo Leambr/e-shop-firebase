@@ -1,30 +1,9 @@
-# React + TypeScript + Vite
+# E-commerce app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project aims at using firebase to create an e-commerce application. A user can create an account, add products to their cart and manage it. They can then order what is in their cart.
+A seller can create an account and add products to be sold.
 
-Currently, two official plugins are available:
+## How to launch the project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+You can run `npm run dev` to start the project.
+For those having access to the firebase project, you can find the values to add to the `.env`. First copy the `.env.dist` and change it to `.env` to have the correct variables.
