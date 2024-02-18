@@ -12,6 +12,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import s from './DashboardMenu.module.css';
+import { useAuthContext } from '../../../context/AuthContext';
 
 interface DashboardMenuProps {
     isOpen: boolean;
@@ -20,6 +21,7 @@ interface DashboardMenuProps {
 
 export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
     const isMobile = useMediaQuery('(max-width: 720px)');
+    const { user } = useAuthContext();
     return (
         <Drawer
             anchor="left"
@@ -34,6 +36,7 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                     <div className={s.headerContent}>
                         <Typography variant="titleM">E-shop Menu</Typography>
                     </div>
+                    
                     <IconButton
                         onClick={onClose}
                         sx={{
@@ -46,71 +49,105 @@ export const DashboardMenu = ({ isOpen, onClose }: DashboardMenuProps) => {
                         <Close />
                     </IconButton>
                 </Box>
-                <div className={s.listContainer}>
-                    <List
-                        sx={{
-                            marginBottom: '32px',
-                            padding: 0,
-                        }}
-                    >
-                        <ListItem
+                {user.role === 'customer' && (
+                    <div className={s.listContainer}>
+                        <List
                             sx={{
-                                padding: '0 0 0 24px',
-                                marginBottom: '4px',
+                                marginBottom: '32px',
+                                padding: 0,
                             }}
                         >
-                            <Typography variant="badge" color={'grey'}>
+                            <ListItem
+                                sx={{
+                                    padding: '0 0 0 24px',
+                                    marginBottom: '4px',
+                                }}
+                            >
+                                <Typography variant="badge" color={'grey'}>
+                                    Products
+                                </Typography>
+                            </ListItem>
+                            <ListItemButton
+                                onClick={onClose}
+                                href="/products"
+                                sx={{
+                                    padding: '12px 32px',
+                                }}
+                            >
                                 Products
-                            </Typography>
-                        </ListItem>
-                        <ListItemButton
-                            onClick={onClose}
-                            href="/products"
+                            </ListItemButton>
+                            <ListItemButton
+                                onClick={onClose}
+                                href="/cart"
+                                sx={{
+                                    padding: '12px 32px',
+                                }}
+                            >
+                                Your cart
+                            </ListItemButton>
+                        </List>
+                        <List
                             sx={{
-                                padding: '12px 32px',
+                                marginBottom: '32px',
+                                padding: 0,
                             }}
                         >
-                            Products
-                        </ListItemButton>
-                        <ListItemButton
-                            onClick={onClose}
-                            href="/cart"
+                            <ListItem
+                                sx={{
+                                    padding: '0 0 0 24px',
+                                    marginBottom: '4px',
+                                }}
+                            >
+                                <Typography variant="badge" color={'grey'}>
+                                    Orders
+                                </Typography>
+                            </ListItem>
+                            <ListItemButton
+                                onClick={onClose}
+                                //mettre la bonne route pour rediriger sur la bonne page
+                                href="/orders"
+                                sx={{
+                                    padding: '12px 32px',
+                                }}
+                            >
+                                See orders
+                            </ListItemButton>
+                        </List>
+                    </div>
+                )}
+
+                {user.role === 'seller' && (
+                    <div className={s.listContainer}>
+                        <List
                             sx={{
-                                padding: '12px 32px',
+                                marginBottom: '32px',
+                                padding: 0,
                             }}
                         >
-                            Your cart
-                        </ListItemButton>
-                    </List>
-                    <List
-                        sx={{
-                            marginBottom: '32px',
-                            padding: 0,
-                        }}
-                    >
-                        <ListItem
-                            sx={{
-                                padding: '0 0 0 24px',
-                                marginBottom: '4px',
-                            }}
-                        >
-                            <Typography variant="badge" color={'grey'}>
-                                Orders
-                            </Typography>
-                        </ListItem>
-                        <ListItemButton
-                            onClick={onClose}
-                            //mettre la bonne route pour rediriger sur la bonne page
-                            href="/orders"
-                            sx={{
-                                padding: '12px 32px',
-                            }}
-                        >
-                            See orders
-                        </ListItemButton>
-                    </List>
-                </div>
+                            <ListItem
+                                sx={{
+                                    padding: '0 0 0 24px',
+                                    marginBottom: '4px',
+                                }}
+                            >
+                                <Typography variant="badge" color={'grey'}>
+                                    Products
+                                </Typography>
+                            </ListItem>
+                            <ListItemButton
+                                onClick={onClose}
+                                href="/products"
+                                sx={{
+                                    padding: '12px 32px',
+                                }}
+                            >
+                                Products
+                            </ListItemButton>
+                        </List>
+                    </div>
+                )}
             </Paper>
+ 
         </Drawer>
     );
 };
